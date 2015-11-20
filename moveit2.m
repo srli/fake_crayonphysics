@@ -36,7 +36,7 @@ set(gcf,'Pointer','custom');
 % Set callbacks
 gui.currenthandle = src;
 thisfig = gcbf();
-set(thisfig,'WindowButtonMotionFcn',@movit);
+set(thisfig,'WindowButtonMotionFcn',@movit)
 set(thisfig,'WindowButtonUpFcn',@stopmovit);
 
 % Store starting point of the object
@@ -48,7 +48,7 @@ set(gcf,'UserData',gui);
 
 
 
-function movit(src,evnt)
+function position = movit(src,evnt)
 % Unpack gui object
 gui = get(gcf,'UserData');
 
@@ -65,7 +65,7 @@ XYData = get(gui.currenthandle,'UserData');
 
 set(gui.currenthandle,'XData',XYData{1} + pos(1,1));
 set(gui.currenthandle,'YData',XYData{2} + pos(1,2));
-
+position = [XYData{1} + pos(1,1), XYData{2} + pos(1,2)]
 drawnow;
 
 % Store gui object
