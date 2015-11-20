@@ -45,44 +45,6 @@ a2_o = LHS(:, 4);
 o1_o = LHS(:, 5);
 o2_o = LHS(:, 6);
 
-%Cartesian Displacement
-figure
-hold all
-plot(x1, y1)
-plot(x2, y2)
-legend('Mass 1', 'Mass 2')
-title('Displacement')
-xlabel('X (m)')
-ylabel('Y (m)')
-
-%Tangential Position/Velocity/Acceleration
-figure
-%Position
-subplot(3,1,1)
-hold all
-plot(T_out, t1_o)
-plot(T_out, t2_o)
-title('Position')
-ylabel('Displacement (rad)')
-legend('Mass1', 'Mass2')
-%Velocity
-subplot(3,1,2)
-hold all
-plot(T_out, t1d_o)
-plot(T_out, t2d_o)
-title('Velocity')
-ylabel('Velocity (rad/s)')
-legend('Mass1', 'Mass2')
-%Acceleration
-subplot(3,1,3)
-hold all
-plot(T_out, t1a_o)
-plot(T_out, t2a_o)
-title('Acceleration')
-xlabel('Time (s)')
-ylabel('Acceleration (rad/s^2)')
-legend('Mass1', 'Mass2')
-
 %Energy
 PE1 = M1*g.*y1;
 KE1 = M1*L1^2*t1d_o.^2/6;
@@ -93,34 +55,39 @@ PE = PE1 + PE2;
 KE = KE1 + KE2;
 TE = PE + KE;
 
+% now animate
 figure
-hold all
-plot(T_out, PE)
-plot(T_out, KE)
-plot(T_out, TE)
-legend('PE', 'KE', 'TE')
-title('Energy')
-xlabel('Time (s)')
-ylabel('Energy (J)')
+axis([-5 5 -3 2])
 
-%Reaction forces
-figure
-subplot(2,1,1)
-hold all
-plot(T_out, o1_o);
-plot(T_out, o2_o);
-title('O Reaction')
-ylabel('Force (N)')
-legend('Mass1', 'Mass2')
-subplot(2,1,2)
-hold all
-plot(T_out, a1_o)
-plot(T_out, a2_o)
-title('A Reaction')
-ylabel('Force (N)')
-xlabel('Time (s)')
-legend('Mass1', 'Mass2')
+    for i=1:length(T_out)
+        plot(x1(i),y1(i),'b.', 'MarkerSize', 30)
+        hold on;
+        plot(x2(i),y2(i),'b.', 'MarkerSize', 30)
+        X1_line=  linspace(0, x1(i), 10);
+        Y1_line = linspace(0, y1(i), 10);
+        
+        X2_line = linspace(x1(i), x2(i), 10);
+        Y2_line = linspace(y1(i), y2(i), 10);
+        hold on
+        plot(X1_line, Y1_line,'k','Linewidth',2)
+        plot(X2_line, Y2_line,'k','Linewidth',2)
 
+%         % Plot the current location of the projectile
+%         % Add a green arrow for the velocity
+%         quiver(x1(i),y1(i),0.2*vx1(i),0.2*vy1(i),'g','Linewidth',2)
+%         quiver(x2(i),y2(i),0.2*vx2(i),0.2*vy2(i),'g','Linewidth',2)
+% 
+%         % And a red one for the acceleration
+%         quiver(x1(i),y1(i),0.01*ax1(i),0.01*ay1(i),'r','Linewidth',2)
+%         quiver(x2(i),y2(i),0.01*ax2(i),0.01*ay2(i),'r','Linewidth',2)
+
+        % Make sure the axis stays fixed size
+        axis([-5 5 -3 2])
+        drawnow
+
+        pause(0.001)
+        hold off
+    end
 
     function vals = calc_LHS(Z)
         t1 = Z(1);
