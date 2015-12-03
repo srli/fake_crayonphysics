@@ -7,18 +7,18 @@ function base_doublepen
 close all
 
 L1 = 1;
-L2 = 1.5;
+L2 = 1;
 L3 = 1;
 M1 = 10;
 M2 = 10;
-M3 = 1;
+M3 = 10;
 g = 9.81;
 
-theta1_0 = pi/3;
+theta1_0 = pi/2;
 theta1v_0 = 0;
-theta2_0 = pi/4;
+theta2_0 = pi/2;
 theta2v_0 = 0;
-theta3_0 = pi/4;
+theta3_0 = pi/2;
 theta3v_0 = 0;
 
 t_interval = [0 20];
@@ -39,8 +39,8 @@ x1 = L1/2.*sin(t1_o);
 y1 = -L1/2.*cos(t1_o);
 x2 = x1*2 + L2/2.*sin(t2_o);
 y2 = y1*2 - L2/2.*cos(t2_o);
-x3 = x1*2 + x2*2 + L3/2.*sin(t3_o);
-y3 = y1*2 + x2*2 + L3/2.*cos(t3_o);
+x3 = x1*2 + L2.*sin(t2_o) + L3/2.*sin(t3_o);
+y3 = y1*2 - L2.*cos(t2_o) - L3/2.*cos(t3_o);
 
 LHS = zeros(length(T_out), 9);
 for i = 1:length(T_out)
