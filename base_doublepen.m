@@ -2,6 +2,7 @@
 %This function calculates the state equations for a double compound
 %pendulum. It also took about 20 hours to debug.
 
+%Should look like this: https://www.youtube.com/watch?v=_o_ap98sTwg
 function base_doublepen
 close all
 
@@ -10,14 +11,14 @@ L2 = 1.5;
 L3 = 1;
 M1 = 10;
 M2 = 10;
-M3 = 10;
+M3 = 1;
 g = 9.81;
 
 theta1_0 = pi/3;
 theta1v_0 = 0;
-theta2_0 = 0;
+theta2_0 = pi/4;
 theta2v_0 = 0;
-theta3_0 = 0;
+theta3_0 = pi/4;
 theta3v_0 = 0;
 
 t_interval = [0 20];
