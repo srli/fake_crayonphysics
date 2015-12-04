@@ -21,7 +21,7 @@ theta2v_0 = 0;
 theta3_0 = pi/2;
 theta3v_0 = 0;
 
-t_interval = [0 30];
+t_interval = 0:.025: 10;
 initial_vals = [theta1_0; theta1v_0; theta2_0; theta2v_0; theta3_0; theta3v_0];
 
 options = odeset('RelTol', 1e-7);
@@ -33,6 +33,15 @@ t2_o = Z_out(:,3);
 t2d_o = Z_out(:,4);
 t3_o = Z_out(:,5);
 t3d_o = Z_out(:,6);
+
+LHS = zeros(length(T_out), 9);
+for i = 1:length(T_out)
+    LHS(i, :) = calc_LHS(Z_out(i, :));
+end
+
+t1dd_o = LHS(:, 1);
+t2dd_o = LHS(:, 2);
+t3dd_o = LHS(:, 3);
 
 x1 = L1/2.*sin(t1_o);
 y1 = -L1/2.*cos(t1_o);
@@ -48,14 +57,14 @@ yv2 = yv1*2 + L2/2.*sin(t2_o).*t2d_o;
 xv3 = xv1*2 + L2.*cos(t2_o).*t2d_o + L3/2.*cos(t3_o).*t3d_o;
 yv3 = yv1*2 + L2.*sin(t2_o).*t2d_o + L3/2.*sin(t3_o).*t3d_o;
 
-LHS = zeros(length(T_out), 9);
-for i = 1:length(T_out)
-    LHS(i, :) = calc_LHS(Z_out(i, :));
-end
-
-t1a_o = LHS(:, 1);
-t2a_o = LHS(:, 2);
-t3a_o = LHS(:, 3);
+xa1 = L1/2.*cos(t1_o).*t1dd_o - L1/2.*sin(t1_o).*t1d_o.^2;
+ya1 = L1/2.*sin(t1_o).*t1dd_o + L1/2.*cos(t1_o).*t1d_o.^2;
+xa2 = L1.*cos(t1_o).*t1dd_o - L1.*sin(t1_o).*t1d_o.^2 + L2/2.*cos(t2_o).*t2dd_o - L2/2.*sin(t2_o).*t2d_o.^2;
+ya2 = L1.*sin(t1_o).*t1dd_o + L1.*cos(t1_o).*t1d_o.^2 + L2/2.*sin(t2_o).*t2dd_o + L2/2.*cos(t2_o).*t2d_o.^2;
+xa3 = L1.*cos(t1_o).*t1dd_o - L1.*sin(t1_o).*t1d_o.^2 + L2.*cos(t2_o).*t2dd_o - L2.*sin(t2_o).*t2d_o.^2 ...
+      + L3/2.*cos(t3_o).*t3dd_o - L3/2.*sin(t3_o).*t3d_o.^2;
+ya3 = L1.*sin(t1_o).*t1dd_o + L1.*cos(t1_o).*t1d_o.^2 + L2.*sin(t2_o).*t2dd_o + L2.*cos(t2_o).*t2d_o.^2 ...
+      + L3/2.*sin(t3_o).*t3dd_o + L3/2.*cos(t3_o).*t3d_o.^2;
 
 %Cartesian Displacement
 figure
@@ -91,9 +100,9 @@ legend('Mass1', 'Mass2', 'Mass3')
 %Acceleration
 subplot(3,1,3)
 hold all
-plot(T_out, t1a_o)
-plot(T_out, t2a_o)
-plot(T_out, t3a_o)
+plot(T_out, t1dd_o)
+plot(T_out, t2dd_o)
+plot(T_out, t3dd_o)
 title('Acceleration')
 xlabel('Time (s)')
 ylabel('Acceleration (rad/s^2)')
@@ -101,11 +110,12 @@ legend('Mass1', 'Mass2', 'Mass3')
 
 %Energy
 PE1 = M1*g.*y1;
-KE1 = 0.5*M1.*(xv1.^2 + yv1.^2);
+KE1 = M1*L1^2*t1d_o.^2/6;
 PE2 = M2*g.*y2;
-KE2 = 0.5*M2.*(xv2.^2 + yv2.^2);
+KE2 = (M2/2)*(L1^2*t1d_o.^2 + (L2^2/3)*t2d_o.^2 + L1*L2*t1d_o.*t2d_o.*cos(t2_o-t1_o));
 PE3 = M3*g.*y3;
-KE3 = 0.5*M3.*(xv3.^2 + yv3.^2);
+KE3 = (M3/2)*(L1^2*t1d_o.^2 + 2*L1*L2.*t1d_o.*t2d_o.*cos(t2_o - t1_o) + 2*L1*L3.*t1d_o.*t3d_o.*cos(t3_o - t1_o) ...
+        + 2*L2*L3.*t2d_o.*t3d_o.*cos(t3_o - t2_o) + L2^2.*t2_o.^2 + (L3^3/4).*t3d_o.^2 + (L3^2/6)*t3d_o.^2);
 PE = PE1 + PE2 + PE3;
 KE = KE1 + KE2 + KE3;
 TE = PE + KE;
@@ -120,6 +130,32 @@ title('Energy')
 xlabel('Time (s)')
 ylabel('Energy (J)')
 
+%%ANIMATION   
+
+    for i = 1:length(T_out)
+        clf; % clear the old figure
+        axis([-3 3 -3 3]);
+        hold all
+        PX = [0; x1(i)];
+        PY = [0; y1(i)];
+        PX2 = [x1(i); x2(i)];
+        PY2 = [y1(i); y2(i)];
+        PX3 = [x2(i); x3(i)];
+        PY3 = [y2(i); y3(i)];
+    %    quiver(position_x1(i), position_y1(i), velocity_x1(i)/5, velocity_y1(i)/5, 'g');
+     %   quiver(position_x1(i), position_y1(i), acceleration_x1(i)/10, acceleration_y1(i)/10, 'r');
+%         quiver(position_x2(i), position_y2(i), velocity_x2(i)/5, velocity_y2(i)/5, 'g');
+%         quiver(position_x2(i), position_y2(i), acceleration_x2(i)/20, acceleration_y2(i)/20, 'r');
+        plot(PX, PY, 'k');
+        plot(PX2, PY2, 'k');
+        plot(PX3, PY3, 'k');
+
+%         plot(position_x1(i), position_y1(i), 'm.', 'linewidth', 10, 'markersize', 20);
+%         plot(position_x2(i), position_y2(i), 'm.', 'linewidth', 10, 'markersize', 20);
+        drawnow; % DO NOT FORGET THIS
+        pause(0.0001);
+    end
+    
     function vals = calc_LHS(Z)
         t1 = Z(1);
         t1d = Z(2);
