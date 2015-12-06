@@ -40,6 +40,9 @@ function res = double_pendulum()
     T2 = -m2*(L1*theta_dd1.*sin(theta2-theta1)-L1*omega1_new.^2.*cos(theta2-theta1)-L2*omega2_new.^2-g*cos(theta2));
     T1 = m1*g*cos(theta1)+ T2.*cos(theta2-theta1) + m1*L1*omega1_new.^2;
    
+    
+    
+    
     figure
     hold on
     plot(T, theta1, 'r')
@@ -93,7 +96,13 @@ function res = double_pendulum()
     legend('T1', 'T2')
     title('Tension')
      
-
+    l1 = sqrt(x1.^2 + y1.^2);
+    l2 = sqrt((x1-x2).^2 + (y1-y2).^2);
+    figure
+    hold all
+    plot(T, l1)
+    plot(T, l2)
+    
     function res = find_theta(t, conditions)
         
         % unpack variable thetas
@@ -110,47 +119,47 @@ function res = double_pendulum()
         res = [theta_dot1; theta_double_dot1; theta_dot2; theta_double_dot2];
                 
     end
- %% ANIMATION   
-
-    for i = 1:length(T)
-        % first pendulum
-        position_x1(i) = L1 .* sin(theta1(i));
-        position_y1(i) = -L1 .* cos(theta1(i));
-        velocity_x1 = L1 .* omega1_new .* cos(theta1);
-        velocity_y1 = L1 .* omega1_new .* sin(theta1(i));
-        acceleration_x1 = L1 .* (-omega1_new.^2 .* sin(theta1) + theta_dd1 .* cos(theta1));
-        acceleration_y1 = L1 .* (omega1_new.^2 .* cos(theta1) + theta_dd1 .* sin(theta1));
-        
-        % second pendulum
-        position_x2(i) = L1 .* sin(theta1(i)) + L2 .* sin(theta2(i));
-        position_y2(i) = -L1 .* cos(theta1(i)) - L2 .* cos(theta2(i));
-        velocity_x2 = L1 .* omega1_new .* cos(theta1) + L2 .* omega2_new .* cos(theta2);
-        velocity_y2 = L1 .* omega1_new .* sin(theta1) + L2 .* omega2_new .* cos(theta2);
-        acceleration_x2 = L1 .* omega1_new .* -omega1_new .* sin(theta1) + L1 .* theta_dd1 .* cos(theta1) + L2 .* omega2_new .* -omega2_new .* sin(theta2) + L2 .* theta_dd2 .* cos(theta2);
-        acceleration_y2 = L1 .* omega1_new .* -omega1_new .* cos(theta1) + L1 .* theta_dd1 .* sin(theta1) + L2 .* omega2_new .* -omega2_new .* cos(theta2) + L2 .* theta_dd2 .* sin(theta2);
-        
-        
-    end
-
-    for i = 1:length(T)
-        clf; % clear the old figure
-        axis([-3 3 -3 3]);
-        hold all
-        PX = [0; position_x1(i)];
-        PY = [0; position_y1(i)];
-        PX2 = [position_x1(i); position_x2(i)];
-        PY2 = [position_y1(i); position_y2(i)];
-        quiver(position_x1(i), position_y1(i), velocity_x1(i)/5, velocity_y1(i)/5, 'g');
-        quiver(position_x1(i), position_y1(i), acceleration_x1(i)/10, acceleration_y1(i)/10, 'r');
-        quiver(position_x2(i), position_y2(i), velocity_x2(i)/5, velocity_y2(i)/5, 'g');
-        quiver(position_x2(i), position_y2(i), acceleration_x2(i)/20, acceleration_y2(i)/20, 'r');
-        plot(PX, PY, 'k');
-        plot(PX2, PY2, 'k');
-        plot(position_x1(i), position_y1(i), 'm.', 'linewidth', 10, 'markersize', 20);
-        plot(position_x2(i), position_y2(i), 'm.', 'linewidth', 10, 'markersize', 20);
-        drawnow; % DO NOT FORGET THIS
-        pause(0.0001);
-    end
-    
+%  %% ANIMATION   
+% 
+%     for i = 1:length(T)
+%         % first pendulum
+%         position_x1(i) = L1 .* sin(theta1(i));
+%         position_y1(i) = -L1 .* cos(theta1(i));
+%         velocity_x1 = L1 .* omega1_new .* cos(theta1);
+%         velocity_y1 = L1 .* omega1_new .* sin(theta1(i));
+%         acceleration_x1 = L1 .* (-omega1_new.^2 .* sin(theta1) + theta_dd1 .* cos(theta1));
+%         acceleration_y1 = L1 .* (omega1_new.^2 .* cos(theta1) + theta_dd1 .* sin(theta1));
+%         
+%         % second pendulum
+%         position_x2(i) = L1 .* sin(theta1(i)) + L2 .* sin(theta2(i));
+%         position_y2(i) = -L1 .* cos(theta1(i)) - L2 .* cos(theta2(i));
+%         velocity_x2 = L1 .* omega1_new .* cos(theta1) + L2 .* omega2_new .* cos(theta2);
+%         velocity_y2 = L1 .* omega1_new .* sin(theta1) + L2 .* omega2_new .* cos(theta2);
+%         acceleration_x2 = L1 .* omega1_new .* -omega1_new .* sin(theta1) + L1 .* theta_dd1 .* cos(theta1) + L2 .* omega2_new .* -omega2_new .* sin(theta2) + L2 .* theta_dd2 .* cos(theta2);
+%         acceleration_y2 = L1 .* omega1_new .* -omega1_new .* cos(theta1) + L1 .* theta_dd1 .* sin(theta1) + L2 .* omega2_new .* -omega2_new .* cos(theta2) + L2 .* theta_dd2 .* sin(theta2);
+%         
+%         
+%     end
+% 
+%     for i = 1:length(T)
+%         clf; % clear the old figure
+%         axis([-3 3 -3 3]);
+%         hold all
+%         PX = [0; position_x1(i)];
+%         PY = [0; position_y1(i)];
+%         PX2 = [position_x1(i); position_x2(i)];
+%         PY2 = [position_y1(i); position_y2(i)];
+%         quiver(position_x1(i), position_y1(i), velocity_x1(i)/5, velocity_y1(i)/5, 'g');
+%         quiver(position_x1(i), position_y1(i), acceleration_x1(i)/10, acceleration_y1(i)/10, 'r');
+%         quiver(position_x2(i), position_y2(i), velocity_x2(i)/5, velocity_y2(i)/5, 'g');
+%         quiver(position_x2(i), position_y2(i), acceleration_x2(i)/20, acceleration_y2(i)/20, 'r');
+%         plot(PX, PY, 'k');
+%         plot(PX2, PY2, 'k');
+%         plot(position_x1(i), position_y1(i), 'm.', 'linewidth', 10, 'markersize', 20);
+%         plot(position_x2(i), position_y2(i), 'm.', 'linewidth', 10, 'markersize', 20);
+%         drawnow; % DO NOT FORGET THIS
+%         pause(0.0001);
+%     end
+%     
     
 end
