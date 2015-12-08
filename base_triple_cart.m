@@ -9,9 +9,11 @@ close all
 L1 = 1;
 L2 = 1;
 L3 = 1;
+L4 = 1;
 M1 = 1;
 M2 = 1;
 M3 = 1;
+M4 = 1;
 g = 9.81;
 
 theta1_0 = pi/2;
@@ -20,9 +22,11 @@ theta2_0 = pi/2;
 theta2v_0 = 0;
 theta3_0 = pi/2;
 theta3v_0 = 0;
+theta4_0 = pi/2;
+theta4v_0 = 0;
 
 t_interval = 0:.025: 20;
-initial_vals = [theta1_0; theta1v_0; theta2_0; theta2v_0; theta3_0; theta3v_0];
+initial_vals = [theta1_0; theta1v_0; theta2_0; theta2v_0; theta3_0; theta3v_0; theta4_0; theta4v_0];
 
 options = odeset('RelTol', 1e-7);
 [T_out, Z_out] = ode45(@motion, t_interval, initial_vals, options);
@@ -33,8 +37,10 @@ t2_o = Z_out(:,3);
 t2d_o = Z_out(:,4);
 t3_o = Z_out(:,5);
 t3d_o = Z_out(:,6);
+t4_o = Z_out(:,7);
+t4d_o = Z_out(:,8);
 
-LHS = zeros(length(T_out), 9);
+LHS = zeros(length(T_out), 12);
 for i = 1:length(T_out)
     LHS(i, :) = calc_LHS(Z_out(i, :));
 end
@@ -42,6 +48,7 @@ end
 t1dd_o = LHS(:, 1);
 t2dd_o = LHS(:, 2);
 t3dd_o = LHS(:, 3);
+t4dd_o = LHS(:, 4);
 
 x1 = L1/2.*sin(t1_o);
 y1 = -L1/2.*cos(t1_o);
@@ -49,6 +56,8 @@ x2 = L1.*sin(t1_o) + L2/2.*sin(t2_o);
 y2 = -L1.*cos(t1_o) - L2/2.*cos(t2_o);
 x3 = L1.*sin(t1_o) + L2.*sin(t2_o) + L3/2.*sin(t3_o);
 y3 = -L1.*cos(t1_o) - L2.*cos(t2_o) - L3/2.*cos(t3_o);
+x4 = L1.*sin(t1_o) + L2.*sin(t2_o) + L3.*sin(t3_o) + L4/2.*sin(t4_o);
+y4 = -L1.*cos(t1_o) - L2.*cos(t2_o) - L3.*cos(t3_o) - L4/2.*cos(t4_o);
 
 xv1 = L1/2.*cos(t1_o).*t1d_o;
 yv1 = L1/2.*sin(t1_o).*t1d_o;
@@ -56,6 +65,8 @@ xv2 = xv1*2 + L2/2.*cos(t2_o).*t2d_o;
 yv2 = yv1*2 + L2/2.*sin(t2_o).*t2d_o;
 xv3 = xv1*2 + L2.*cos(t2_o).*t2d_o + L3/2.*cos(t3_o).*t3d_o;
 yv3 = yv1*2 + L2.*sin(t2_o).*t2d_o + L3/2.*sin(t3_o).*t3d_o;
+xv4 = xv1*2 + L2.*cos(t2_o).*t2d_o + L3.*cos(t3_o).*t3d_o + L4/2.*cos(t4_o).*t4d_o;
+yv4 = yv1*2 + L2.*sin(t2_o).*t2d_o + L3.*sin(t3_o).*t3d_o + L4/2.*sin(t4_o).*t4d_o;
 
 xa1 = L1/2.*cos(t1_o).*t1dd_o - L1/2.*sin(t1_o).*t1d_o.^2;
 ya1 = L1/2.*sin(t1_o).*t1dd_o + L1/2.*cos(t1_o).*t1d_o.^2;
@@ -66,16 +77,16 @@ xa3 = L1.*cos(t1_o).*t1dd_o - L1.*sin(t1_o).*t1d_o.^2 + L2.*cos(t2_o).*t2dd_o - 
 ya3 = L1.*sin(t1_o).*t1dd_o + L1.*cos(t1_o).*t1d_o.^2 + L2.*sin(t2_o).*t2dd_o + L2.*cos(t2_o).*t2d_o.^2 ...
       + L3/2.*sin(t3_o).*t3dd_o + L3/2.*cos(t3_o).*t3d_o.^2;
 
-%Cartesian Displacement
-figure
-hold all
-plot(x1, y1)
-plot(x2, y2)
-plot(x3, y3)
-legend('Mass 1', 'Mass 2', 'Mass 3')
-title('Displacement')
-xlabel('X (m)')
-ylabel('Y (m)')
+% %Cartesian Displacement
+% figure
+% hold all
+% plot(x1, y1)
+% plot(x2, y2)
+% plot(x3, y3)
+% legend('Mass 1', 'Mass 2', 'Mass 3')
+% title('Displacement')
+% xlabel('X (m)')
+% ylabel('Y (m)')
 
 %Tangential Position/Velocity/Acceleration
 figure
@@ -85,44 +96,46 @@ hold all
 plot(T_out, t1_o)
 plot(T_out, t2_o)
 plot(T_out, t3_o)
+plot(T_out, t4_o)
 title('Position')
 ylabel('Displacement (rad)')
-legend('Mass1', 'Mass2', 'Mass3')
+legend('Mass1', 'Mass2', 'Mass3', 'Mass4')
 %Velocity
 subplot(3,1,2)
 hold all
 plot(T_out, t1d_o)
 plot(T_out, t2d_o)
 plot(T_out, t3d_o)
+plot(T_out, t4d_o)
 title('Velocity')
 ylabel('Velocity (rad/s)')
-legend('Mass1', 'Mass2', 'Mass3')
+legend('Mass1', 'Mass2', 'Mass3', 'Mass4')
 %Acceleration
 subplot(3,1,3)
 hold all
 plot(T_out, t1dd_o)
 plot(T_out, t2dd_o)
 plot(T_out, t3dd_o)
+plot(T_out, t4dd_o)
 title('Acceleration')
 xlabel('Time (s)')
 ylabel('Acceleration (rad/s^2)')
-legend('Mass1', 'Mass2', 'Mass3')
+legend('Mass1', 'Mass2', 'Mass3', 'Mass4')
 
 %Energy
 PE1 = M1*g.*y1;
-KE1 = M1*L1^2*t1d_o.^2/6;
 PE2 = M2*g.*y2;
-KE2 = (M2/2)*(L1^2*t1d_o.^2 + (L2^2/3)*t2d_o.^2 + L1*L2*t1d_o.*t2d_o.*cos(t2_o-t1_o));
 PE3 = M3*g.*y3;
-KE3 = (M3/2)*(L1^2*t1d_o.^2 + 2*L1*L2.*t1d_o.*t2d_o.*cos(t2_o - t1_o) + 2*L1*L3.*t1d_o.*t3d_o.*cos(t3_o - t1_o) ...
-        + 2*L2*L3.*t2d_o.*t3d_o.*cos(t3_o - t2_o) + L2^2.*t2_o.^2 + (L3^3/4).*t3d_o.^2 + (L3^2/6)*t3d_o.^2);
+PE4 = M4*g.*y4;
+
 
 KE1 = (M1/2)*((xv1.^2 + yv1.^2) + t1d_o.^2*((L1^2)/12));
 KE2 = (M2/2)*((xv2.^2 + yv2.^2) + t2d_o.^2*((L2^2)/12));
 KE3 = (M3/2)*((xv3.^2 + yv3.^2) + t3d_o.^2*((L3^2)/12));
+KE4 = (M4/2)*((xv4.^2 + yv4.^2) + t4d_o.^2*((L4^2)/12));
 
-PE = PE1 + PE2 + PE3;
-KE = KE1 + KE2 + KE3;
+PE = PE1 + PE2 + PE3 + PE4;
+KE = KE1 + KE2 + KE3 + KE4;
 TE = PE + KE;
 
 figure
@@ -168,17 +181,23 @@ ylabel('Energy (J)')
         t2d = Z(4);
         t3 = Z(5);
         t3d = Z(6);
+        t4 = Z(7);
+        t4d = Z(8);
        
-%                    %t1dd, t2dd, t3dd, O1, O2, A1, A2, P1, P2
-        A = [-M1*(L1/2)*cos(t1), 0, 0, 1, 0, 1, 0, 0, 0;
-            M1*(L1/2)*sin(t1), 0, 0, 0, 1, 0, 1, 0, 0;
-            -M2*L1*cos(t1), -M2*(L2/2)*cos(t2), 0, 0, 0, -1, 0, 1, 0;
-            M2*L1*sin(t1), M2*(L2/2)*sin(t2), 0, 0, 0, 0, -1, 0, 1;
-            -M3*L1*cos(t1), -M3*L2*cos(t2), -M3*(L3/2)*cos(t3), 0, 0, 0, 0, -1, 0;
-            M3*L1*sin(t1), M3*L2*sin(t2), M3*(L3/2)*sin(t3), 0, 0, 0, 0, 0, -1;
-            (-M1*L1^2)/12, 0, 0, -(L1/2)*cos(t1), (L1/2)*sin(t1), (L1/2)*cos(t1), -(L1/2)*sin(t1), 0, 0;
-            0, (-M2*L2^2)/12, 0, 0, 0, (L2/2)*cos(t2), -(L2/2)*sin(t2), (L2/2)*cos(t2), -(L2/2)*sin(t2);
-            0, 0, (-M3*L3^2)/12, 0, 0, 0, 0, (L3/2)*cos(t3), -(L3/2)*sin(t3)];
+        A = [-M1*(L1/2)*cos(t1), 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0;
+            M1*(L1/2)*sin(t1), 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0;
+            -M2*L1*cos(t1), -M2*(L2/2)*cos(t2), 0, 0, 0, 0, -1, 0, 1, 0, 0, 0;
+            M2*L1*sin(t1), M2*(L2/2)*sin(t2), 0, 0, 0, 0, 0, -1, 0, 1, 0, 0;
+            -M3*L1*cos(t1), -M3*L2*cos(t2), -M3*(L3/2)*cos(t3), 0, 0, 0, 0, 0, -1, 0, 1, 0;
+            M3*L1*sin(t1), M3*L2*sin(t2), M3*(L3/2)*sin(t3), 0, 0, 0, 0, 0, 0, -1, 0, 1;
+            -M4*L1*cos(t1), -M4*L2*cos(t2), -M4*L3*cos(t3), -M4*(L4/2)*cos(t4), 0, 0, 0, 0, 0, 0, -1, 0;
+            M4*L1*sin(t1), M4*L2*sin(t2), M4*L3*sin(t3), M4*(L4/2)*sin(t4), 0, 0, 0, 0, 0, 0, 0, -1;
+            
+            (-M1*L1^2)/12, 0, 0, 0, -(L1/2)*cos(t1), (L1/2)*sin(t1), (L1/2)*cos(t1), -(L1/2)*sin(t1), 0, 0, 0, 0;
+            0, (-M2*L2^2)/12, 0, 0, 0, 0, (L2/2)*cos(t2), -(L2/2)*sin(t2), (L2/2)*cos(t2), -(L2/2)*sin(t2), 0, 0;
+            0, 0, (-M3*L3^2)/12, 0, 0, 0, 0, 0, (L3/2)*cos(t3), -(L3/2)*sin(t3),(L3/2)*cos(t3), -(L3/2)*sin(t3);
+            0, 0, 0, (-M4*L4^2)/12, 0, 0, 0, 0, 0, 0, (L4/2)*cos(t4), -(L4/2)*sin(t4)
+            ];
         
         r = [-M1*t1d^2*(L1/2)*sin(t1);
             -M1*t1d^2*(L1/2)*cos(t1) - M1*g;
@@ -186,32 +205,13 @@ ylabel('Energy (J)')
             -M2*t1d^2*L1*cos(t1) - M2*t2d^2*(L2/2)*cos(t2) - M2*g;
             -M3*t1d^2*L1*sin(t1) - M3*t2d^2*L2*sin(t2) - M3*t3d^2*(L3/2)*sin(t3);
             -M3*t1d^2*L1*cos(t1) - M3*t2d^2*L2*cos(t2) - M3*t3d^2*(L3/2)*cos(t3) - M3*g;
+            -M4*t1d^2*L1*sin(t1) - M4*t2d^2*L2*sin(t2) - M4*t3d^2*L3*sin(t3) - M4*t4d^2*(L4/2)*sin(t4);
+            -M4*t1d^2*L1*cos(t1) - M4*t2d^2*L2*cos(t2) - M4*t3d^2*L3*cos(t3) - M4*t4d^2*(L4/2)*cos(t4) - M4*g;
+            0;
             0;
             0;
             0];
         
-        
-%            %t1dd, t2dd, t3dd, O1, O2, A1, A2, P1, P2
-%         A = [M1*(L1/2)*sin(t1), 0, 0, 1, 0, 1, 0, 0, 0;
-%             -M1*(L1/2)*cos(t1), 0, 0, 0, 1, 0, 1, 0, 0;
-%             M2*L1*sin(t1), M2*(L2/2)*sin(t2), 0, 0, 0, -1, 0, 1, 0;
-%             -M2*L1*cos(t1), -M2*(L2/2)*cos(t2), 0, 0, 0, 0, -1, 0, 1;
-%             M3*L1*sin(t1), M3*L2*sin(t2), M3*(L3/2)*sin(t3), 0, 0, 0, 0, -1, 0;
-%             -M3*L1*cos(t1), -M3*L2*cos(t2), -M3*(L3/2)*cos(t3), 0, 0, 0, 0, 0, -1;
-%             (-M1*L1^2)/12, 0, 0, (L1/2)*sin(t1), -(L1/2)*cos(t1), -(L1/2)*sin(t1), (L1/2)*cos(t1), 0, 0;
-%             0, (-M2*L2^2)/12, 0, 0, 0, -(L2/2)*sin(t2), (L2/2)*cos(t2), -(L2/2)*sin(t2), (L2/2)*cos(t2);
-%             0, 0, (-M3*L3^2)/12, 0, 0, 0, 0, -(L3/2)*sin(t3), (L3/2)*cos(t3)];
-%         
-%         r = [-M1*t1d^2*(L1/2)*cos(t1);
-%             -M1*t1d^2*(L1/2)*sin(t1) - M1*g;
-%             -M2*t1d^2*L1*cos(t1) - M2*t2d^2*(L2/2)*cos(t2);
-%             -M2*t1d^2*L1*sin(t1) - M2*t2d^2*(L2/2)*sin(t2) - M2*g;
-%             -M3*t1d^2*L1*cos(t1) - M3*t2d^2*L2*cos(t2) - M3*t3d^2*(L3/2)*cos(t3);
-%             -M3*t1d^2*L1*sin(t1) - M3*t2d^2*L2*sin(t2) - M3*t3d^2*(L3/2)*sin(t3) - M3*g;
-%             0;
-%             0;
-%             0];
-%         
         vals = A\r; 
     end
 
@@ -219,14 +219,17 @@ ylabel('Energy (J)')
         t1d = Z(2);
         t2d = Z(4);
         t3d = Z(6);
-        
+        t4d = Z(8);
+
         res = calc_LHS(Z);
+        
         
         t1dd = res(1);
         t2dd = res(2);
         t3dd = res(3);
+        t4dd = res(4);
 
-        vals = [t1d; t1dd; t2d; t2dd; t3d; t3dd];
+        vals = [t1d; t1dd; t2d; t2dd; t3d; t3dd; t4d; t4dd];
         
     end
 
