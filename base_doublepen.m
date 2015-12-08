@@ -184,49 +184,29 @@ y3 = -L1.*cos(t1_o) - L2.*cos(t2_o) - L3.*cos(t3_o);
         t3 = Z(5);
         t3d = Z(6);
         
-%         t2a = t2 - t1;
-%         t3a = t3 - t2;
-%         t3b = t3 - t1;
-%        
-%         A = [0, 0, 0, 1, 0, cos(t2a), -sin(t2a), 0, 0;
-%             -M1*(L1/2), 0, 0, 0, 1, sin(t2a), cos(t2a), 0, 0;
-%             -M2*L1*sin(t2a), 0, 0, 0, 0, -1, 0, cos(t3a), -sin(t3a);
-%             M2*L1*cos(t2a), M2*(L2/2), 0, 0, 0, 0, 1, -sin(t3a), -cos(t3a);
-%             M3*L1*sin(t3b), M3*L2*sin(t3a), 0, 0, 0, 0, 0, 1, 0;
-%             M3*L1*cos(t3b), M3*L2*cos(t3a), M3*(L3/2), 0, 0, 0, 0, 0, 1;
-%             (M1*L1^2)/12, 0, 0, 0, L1/2, (L1/2)*sin(t2a), (L1/2)*cos(t2a), 0, 0;
-%             0, (M2*L2^2)/12, 0, 0, 0, 0, -L2/2, (-L2/2)*sin(t3a), (-L2/2)*cos(t3a);
-%             0, 0, (M3*L3^2)/12, 0, 0, 0, 0, 0, -L3/2];
-%           
-%        r = [-M1*t1d^2*(L1/2) - M1*g*cos(t1);
-%            M1*g*sin(t1);
-%            -M2*t1d^2*L1*cos(t2a) - M2*t2d^2*(L2/2) - M2*g*cos(t2);
-%            -M2*t1d^2*L1*sin(t2a) - M2*g*sin(t2);
-%            M3*t1d^2*L1*cos(t3b) + M3*t2d^2*L2*cos(t3a)+ M3*g*cos(t3) + M3*t3d^2*(L3/2);
-%            -M3*t1d^2*L1*sin(t3b) - M3*t2d^2*L2*sin(t3a) - M3*g*sin(t3);
-%            0;
-%            0;
-%            0];
-           %t1dd, t2dd, t3dd, O1, O2, A1, A2, P1, P2
-        A = [M1*(L1/2)*sin(t1), 0, 0, 1, 0, 1, 0, 0, 0;
-            -M1*(L1/2)*cos(t1), 0, 0, 0, 1, 0, 1, 0, 0;
-            M2*L1*sin(t1), M2*(L2/2)*sin(t2), 0, 0, 0, -1, 0, 1, 0;
-            -M2*L1*sin(t1), -M2*(L2/2)*cos(t2), 0, 0, 0, 0, -1, 0, 1;
-            M3*L1*sin(t1), M3*L2*sin(t2), M3*(L3/2)*sin(t3), 0, 0, 0, 0, -1, 0;
-            -M3*L1*sin(t1), -M3*L2*cos(t2), -M3*(L3/2)*cos(t3), 0, 0, 0, 0, 0, -1;
-            (-M1*L1^2)/12, 0, 0, (L1/2)*sin(t1), -(L1/2)*cos(t1), -(L1/2)*sin(t1), (L1/2)*cos(t1), 0, 0;
-            0, (-M2*L2^2)/12, 0, 0, 0, -(L2/2)*sin(t2), (L2/2)*cos(t2), -(L2/2)*sin(t2), (L2/2)*cos(t2);
-            0, 0, (-M3*L3^2)/12, 0, 0, 0, 0, -(L3/2)*sin(t3), (L3/2)*cos(t3)];
-        
-        r = [-M1*t1d^2*(L1/2)*cos(t1);
-            -M1*t1d^2*(L1/2)*sin(t1) - M1*g;
-            -M2*t1d^2*L1*cos(t1) - M2*t2d^2*(L2/2)*cos(t2);
-            -M2*t1d^2*L1*sin(t1) - M2*t2d^2*(L2/2)*sin(t2) - M2*g;
-            -M3*t1d^2*L1*cos(t1) - M3*t2d^2*L2*cos(t2) - M3*t3d^2*(L3/2)*cos(t3);
-            -M3*t1d^2*L1*sin(t1) - M3*t2d^2*L2*sin(t2) - M3*t3d^2*(L3/2)*sin(t3) - M3*g;
-            0;
-            0;
-            0];
+        t2a = t2 - t1;
+        t3a = t3 - t2;
+        t3b = t3 - t1;
+       
+        A = [0, 0, 0, 1, 0, cos(t2a), -sin(t2a), 0, 0;
+            -M1*(L1/2), 0, 0, 0, 1, sin(t2a), cos(t2a), 0, 0;
+            -M2*L1*sin(t2a), 0, 0, 0, 0, -1, 0, cos(t3a), -sin(t3a);
+            M2*L1*cos(t2a), M2*(L2/2), 0, 0, 0, 0, 1, -sin(t3a), -cos(t3a);
+            M3*L1*sin(t3b), M3*L2*sin(t3a), 0, 0, 0, 0, 0, 1, 0;
+            M3*L1*cos(t3b), M3*L2*cos(t3a), M3*(L3/2), 0, 0, 0, 0, 0, 1;
+            (M1*L1^2)/12, 0, 0, 0, L1/2, (L1/2)*sin(t2a), (L1/2)*cos(t2a), 0, 0;
+            0, (M2*L2^2)/12, 0, 0, 0, 0, -L2/2, (-L2/2)*sin(t3a), (-L2/2)*cos(t3a);
+            0, 0, (M3*L3^2)/12, 0, 0, 0, 0, 0, -L3/2];
+          
+       r = [-M1*t1d^2*(L1/2) - M1*g*cos(t1);
+           M1*g*sin(t1);
+           -M2*t1d^2*L1*cos(t2a) - M2*t2d^2*(L2/2) - M2*g*cos(t2);
+           -M2*t1d^2*L1*sin(t2a) - M2*g*sin(t2);
+           M3*t1d^2*L1*cos(t3b) + M3*t2d^2*L2*cos(t3a)+ M3*g*cos(t3) + M3*t3d^2*(L3/2);
+           -M3*t1d^2*L1*sin(t3b) - M3*t2d^2*L2*sin(t3a) - M3*g*sin(t3);
+           0;
+           0;
+           0];
         
         vals = A\r; 
     end
