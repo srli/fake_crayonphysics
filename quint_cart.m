@@ -194,10 +194,10 @@ figure
      %   quiver(position_x1(i), position_y1(i), acceleration_x1(i)/10, acceleration_y1(i)/10, 'r');
 %         quiver(position_x2(i), position_y2(i), velocity_x2(i)/5, velocity_y2(i)/5, 'g');
 %         quiver(position_x2(i), position_y2(i), acceleration_x2(i)/20, acceleration_y2(i)/20, 'r');
-        plot(PX, PY, 'k');
-        plot(PX2, PY2, 'k');
-        plot(PX3, PY3, 'k');
-        plot(PX4, PY4, 'k');
+        plot(PX, PY, 'r');
+        plot(PX2, PY2, 'g');
+        plot(PX3, PY3, 'b');
+        plot(PX4, PY4, 'p');
         plot(PX5, PY5, 'k');
 
 %         plot(position_x1(i), position_y1(i), 'm.', 'linewidth', 10, 'markersize', 20);
