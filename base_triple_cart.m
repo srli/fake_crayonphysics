@@ -17,13 +17,13 @@ M4 = 1;
 g = 9.81;
 
 theta1_0 = pi/2;
-theta1v_0 = 0;
+theta1v_0 = 0.5;
 theta2_0 = pi/2;
-theta2v_0 = 0;
+theta2v_0 = 0.2;
 theta3_0 = pi/2;
-theta3v_0 = 0;
+theta3v_0 = 0.2;
 theta4_0 = pi/2;
-theta4v_0 = 0;
+theta4v_0 = 0.2;
 
 t_interval = 0:.025: 20;
 initial_vals = [theta1_0; theta1v_0; theta2_0; theta2v_0; theta3_0; theta3v_0; theta4_0; theta4v_0];
@@ -147,43 +147,44 @@ title('Energy')
 xlabel('Time (s)')
 ylabel('Energy (J)')
  
-% %%ANIMATION   
-% 
-% x1 = L1.*sin(t1_o);
-% y1 = -L1.*cos(t1_o);
-% x2 = L1.*sin(t1_o) + L2.*sin(t2_o);
-% y2 = -L1.*cos(t1_o) - L2.*cos(t2_o);
-% x3 = L1.*sin(t1_o) + L2.*sin(t2_o) + L3.*sin(t3_o);
-% y3 = -L1.*cos(t1_o) - L2.*cos(t2_o) - L3.*cos(t3_o);
-% x4 = L1.*sin(t1_o) + L2.*sin(t2_o) + L3.*sin(t3_o) + L4.*sin(t4_o);
-% y4 = -L1.*cos(t1_o) - L2.*cos(t2_o) - L3.*cos(t3_o) - L4.*cos(t4_o);
-% figure
-%     for i = 1:length(T_out)
-%         clf; % clear the old figure
-%         axis([-3 3 -3 3]);
-%         hold all
-%         PX = [0; x1(i)];
-%         PY = [0; y1(i)];
-%         PX2 = [x1(i); x2(i)];
-%         PY2 = [y1(i); y2(i)];
-%         PX3 = [x2(i); x3(i)];
-%         PY3 = [y2(i); y3(i)];
-%         PX4 = [x3(i); x4(i)];
-%         PY4 = [y3(i); y4(i)];
-%     %    quiver(position_x1(i), position_y1(i), velocity_x1(i)/5, velocity_y1(i)/5, 'g');
-%      %   quiver(position_x1(i), position_y1(i), acceleration_x1(i)/10, acceleration_y1(i)/10, 'r');
-% %         quiver(position_x2(i), position_y2(i), velocity_x2(i)/5, velocity_y2(i)/5, 'g');
-% %         quiver(position_x2(i), position_y2(i), acceleration_x2(i)/20, acceleration_y2(i)/20, 'r');
-%         plot(PX, PY, 'k');
-%         plot(PX2, PY2, 'k');
-%         plot(PX3, PY3, 'k');
-%         plot(PX4, PY4, 'k');
-% 
-% %         plot(position_x1(i), position_y1(i), 'm.', 'linewidth', 10, 'markersize', 20);
-% %         plot(position_x2(i), position_y2(i), 'm.', 'linewidth', 10, 'markersize', 20);
-%         drawnow; % DO NOT FORGET THIS
-%         pause(0.0005);
-%     end
+%%ANIMATION   
+
+x1 = L1.*sin(t1_o);
+y1 = -L1.*cos(t1_o);
+x2 = L1.*sin(t1_o) + L2.*sin(t2_o);
+y2 = -L1.*cos(t1_o) - L2.*cos(t2_o);
+x3 = L1.*sin(t1_o) + L2.*sin(t2_o) + L3.*sin(t3_o);
+y3 = -L1.*cos(t1_o) - L2.*cos(t2_o) - L3.*cos(t3_o);
+x4 = L1.*sin(t1_o) + L2.*sin(t2_o) + L3.*sin(t3_o) + L4.*sin(t4_o);
+y4 = -L1.*cos(t1_o) - L2.*cos(t2_o) - L3.*cos(t3_o) - L4.*cos(t4_o);
+
+figure
+    for i = 1:length(T_out)
+        clf; % clear the old figure
+        axis([-5 5 -5 5]);
+        hold all
+        PX = [0; x1(i)];
+        PY = [0; y1(i)];
+        PX2 = [x1(i); x2(i)];
+        PY2 = [y1(i); y2(i)];
+        PX3 = [x2(i); x3(i)];
+        PY3 = [y2(i); y3(i)];
+        PX4 = [x3(i); x4(i)];
+        PY4 = [y3(i); y4(i)];
+    %    quiver(position_x1(i), position_y1(i), velocity_x1(i)/5, velocity_y1(i)/5, 'g');
+     %   quiver(position_x1(i), position_y1(i), acceleration_x1(i)/10, acceleration_y1(i)/10, 'r');
+%         quiver(position_x2(i), position_y2(i), velocity_x2(i)/5, velocity_y2(i)/5, 'g');
+%         quiver(position_x2(i), position_y2(i), acceleration_x2(i)/20, acceleration_y2(i)/20, 'r');
+        plot(PX, PY, 'k');
+        plot(PX2, PY2, 'k');
+        plot(PX3, PY3, 'k');
+        plot(PX4, PY4, 'k');
+
+%         plot(position_x1(i), position_y1(i), 'm.', 'linewidth', 10, 'markersize', 20);
+%         plot(position_x2(i), position_y2(i), 'm.', 'linewidth', 10, 'markersize', 20);
+        drawnow; % DO NOT FORGET THIS
+        pause(0.0005);
+    end
     
     function vals = calc_LHS(Z)
         t1 = Z(1);
@@ -233,7 +234,6 @@ ylabel('Energy (J)')
         t4d = Z(8);
 
         res = calc_LHS(Z);
-        
         
         t1dd = res(1);
         t2dd = res(2);
