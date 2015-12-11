@@ -17,13 +17,13 @@ M4 = 1;
 g = 9.81;
 
 theta1_0 = pi/2;
-theta1v_0 = 0.5;
+theta1v_0 = 0;
 theta2_0 = pi/2;
-theta2v_0 = 0.2;
+theta2v_0 = 0;
 theta3_0 = pi/2;
-theta3v_0 = 0.2;
+theta3v_0 = 0;
 theta4_0 = pi/2;
-theta4v_0 = 0.2;
+theta4v_0 = 0;
 
 t_interval = 0:.025: 20;
 initial_vals = [theta1_0; theta1v_0; theta2_0; theta2v_0; theta3_0; theta3v_0; theta4_0; theta4v_0];

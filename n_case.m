@@ -1,9 +1,9 @@
 function result = n_case()
 
-p_length = [1, 2];
-p_mass = [1, 1];
-t_init = [pi/2, 0];
-tv_init = [0, 0];
+p_length = [1, 1, 1, 1];
+p_mass = [1, 1, 1, 1];
+t_init = [pi/2, pi/2, pi/2, pi/2];
+tv_init = [0, 0, 0, 0];
 g = 9.81;
 [m, n_size] = size(p_length);
 
@@ -24,16 +24,14 @@ options = odeset('RelTol', 1e-7);
 %Tangential Position/Velocity/Acceleration
 figure
 %Position
-subplot(3,1,1)
 hold all
-
-plot(T_out, t1_o)
-plot(T_out, t2_o)
-plot(T_out, t3_o)
-plot(T_out, t4_o)
+z = 1;
+while z <= n_size
+   plot(T_out, Z_out(:,z*2-1))
+   z = z+1;
+end
 title('Position')
 ylabel('Displacement (rad)')
-legend('Mass1', 'Mass2', 'Mass3', 'Mass4')
 
     function vals = calc_LHS(Z)
         A = zeros(n_size*3);
