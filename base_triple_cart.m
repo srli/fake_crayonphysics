@@ -184,7 +184,7 @@ figure
 %         plot(position_x1(i), position_y1(i), 'm.', 'linewidth', 10, 'markersize', 20);
 %         plot(position_x2(i), position_y2(i), 'm.', 'linewidth', 10, 'markersize', 20);
         drawnow; % DO NOT FORGET THIS
-        pause(0.0005);
+        pause(0.00005);
     end
     
     function vals = calc_LHS(Z)
