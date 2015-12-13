@@ -34,18 +34,166 @@ with open("n_pen.m", 'w') as f:
 	f.write("[T_out, Z_out] = ode45(@motion, t_interval, initial_vals, options);\n")
 	f.write("\n")
 
-	#GRAPHING FUNCS
+	#GET THETA VALUES
 	for i in range(n_len):
 		i += 1
 		f.write("t"+str(i)+"_o = Z_out(:,"+str(2*i-1)+");\n")
 		f.write("t"+str(i)+"d_o = Z_out(:,"+str(2*i)+");\n")
 	f.write("\n")
 
+	f.write("LHS = zeros(length(T_out), "+str(n_len*3)+");\n")
+	f.write("for i = 1:length(T_out)\n")
+	f.write("\tLHS(i, :) = calc_LHS(Z_out(i, :));\n")
+	f.write("end\n")
+	
+	f.write("\n")
+	for i in range(n_len):
+		i += 1
+		f.write("t"+str(i)+"dd_o = LHS(:,"+str(i+1)+");\n")
+	f.write("\n")
+
+
+	#GRAPHING THETA FUNCS
 	f.write("figure\n")
+	legend = "legend("
+	for i in range(n_len):
+		i += 1
+		if i == n_len:
+			legend += "\'Mass"+str(i)+"\')"
+		else:
+			legend += "\'Mass"+str(i)+"\', "
+
+	f.write("subplot(3,1,1)\n")
 	f.write("hold all\n")
 	for i in range(n_len):
 		i += 1
 		f.write("plot(T_out, t"+str(i)+"_o)\n")
+	f.write("title(\'Position\')\n")
+	f.write("ylabel(\'Displacement (rad)\')\n")
+	f.write(legend+"\n")
+	f.write("\n")
+
+	f.write("subplot(3,1,2)\n")
+	f.write("hold all\n")
+	for i in range(n_len):
+		i += 1
+		f.write("plot(T_out, t"+str(i)+"d_o)\n")
+	f.write("title(\'Velocity\')\n")
+	f.write("ylabel(\'Velocity (rad/s)\')\n")
+	f.write(legend+"\n")
+	f.write("\n")
+
+	f.write("subplot(3,1,3)\n")
+	f.write("hold all\n")
+	for i in range(n_len):
+		i += 1
+		f.write("plot(T_out, t"+str(i)+"dd_o)\n")
+	f.write("title(\'Acceleration\')\n")
+	f.write("xlabel(\'Time (s)\')\n")
+	f.write("ylabel(\'Acceleration (rad/s^2)\')\n")
+	f.write(legend+"\n")
+	f.write("\n")
+
+	#CALC CARTESIAN POSITIONS
+	for i in range(n_len):
+		i += 1
+		x_t = "x"+str(i)+" = "
+		y_t = "y"+str(i)+" = "
+
+		xv_t = "xv"+str(i)+" = "
+		yv_t = "yv"+str(i)+" = "
+
+		for j in range(i):
+			j += 1
+			if j == i:
+				x_t += "+(L"+str(j)+"/2).*sin(t"+str(j)+"_o)"
+				y_t += "-(L"+str(j)+"/2).*cos(t"+str(j)+"_o)"
+
+				xv_t += "+(L"+str(j)+"/2).*cos(t"+str(j)+"_o).*t"+str(j)+"d_o"
+				yv_t += "+(L"+str(j)+"/2).*sin(t"+str(j)+"_o).*t"+str(j)+"d_o"
+
+			else:
+				x_t += "+L"+str(j)+".*sin(t"+str(j)+"_o)"
+				y_t += "-L"+str(j)+".*cos(t"+str(j)+"_o)"
+
+				xv_t += "+L"+str(j)+".*cos(t"+str(j)+"_o).*t"+str(j)+"d_o"
+				yv_t += "+L"+str(j)+".*sin(t"+str(j)+"_o).*t"+str(j)+"d_o"
+
+		f.write(x_t+";\n")
+		f.write(y_t+";\n")
+
+		f.write(xv_t+";\n")
+		f.write(yv_t+";\n")
+		f.write("\n")
+
+	f.write("\n")
+
+	#ENERGY CALCULATIONS
+	for i in range(n_len):
+		i += 1
+		f.write("PE"+str(i)+" = M"+str(i)+"*g.*y"+str(i)+";\n")
+		f.write("KE"+str(i)+" = (M"+str(i)+"/2)*((xv"+str(i)+".^2 + yv"+str(i)+".^2)) + t"+str(i)+"d_o.^2*((L"+str(i)+"^2/12));\n")
+
+	PE_t = "PE = "
+	KE_t = "KE = "
+	for i in range(n_len):
+		i += 1
+		PE_t += "+PE"+str(i)
+		KE_t += "+KE"+str(i)
+
+	f.write("\n")
+	f.write(PE_t+";\n")
+	f.write(KE_t+";\n")
+	f.write("TE = PE + KE;\n")
+
+	f.write("figure\n")
+	f.write("hold all\n")
+	f.write("plot(T_out, PE);\n")
+	f.write("plot(T_out, KE);\n")
+	f.write("plot(T_out, TE);\n")
+	f.write("title(\'Total Energy\')\n")
+	f.write("xlabel(\'Time (s)\')\n")
+	f.write("ylabel(\'Energy (J)\')\n")
+	f.write("legend(\'PE\', \'KE\', \'TE\')\n")
+	f.write("\n")
+
+	#ANIMATION FUNCTIONS
+	for i in range(n_len):
+		i += 1
+		x_t = "x"+str(i)+" = "
+		y_t = "y"+str(i)+" = "
+
+		for j in range(i):
+			j += 1
+
+			x_t += "+L"+str(j)+".*sin(t"+str(j)+"_o)"
+			y_t += "-L"+str(j)+".*cos(t"+str(j)+"_o)"
+
+		f.write(x_t+";\n")
+		f.write(y_t+";\n")
+
+		f.write("\n")
+
+	f.write("\n")
+	f.write("figure\n")
+	f.write("for i = 1:length(T_out)\n")
+	f.write("\tclf;\n")
+	f.write("\taxis([-5 5 -5 5]);\n")
+	f.write("\thold all\n")
+
+	for i in range(n_len):
+		i += 1
+		if i == 1:
+			f.write("\tPX1 = [0; x1(i)];\n")
+			f.write("\tPY1 = [0; y1(i)];\n")
+		else:
+			f.write("\tPX"+str(i)+" = [x"+str(i-1)+"(i); x"+str(i)+"(i)];\n")
+			f.write("\tPY"+str(i)+" = [y"+str(i-1)+"(i); y"+str(i)+"(i)];\n")
+		f.write("\n")
+		f.write("\tplot(PX"+str(i)+", PY"+str(i)+", \'k\');\n")
+	f.write("\tdrawnow;\n")
+	f.write("\tpause(0.0005);\n")
+	f.write("end\n")
 
 	#CALC LHS
 	f.write("function res = calc_LHS(Z)\n")
