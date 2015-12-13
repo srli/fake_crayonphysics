@@ -1,9 +1,9 @@
 function result = n_case()
 
-p_length = [1, 1, 1, 1];
-p_mass = [10, 10, 10, 10];
-t_init = [pi/2, pi/2, pi/2, pi/2];
-tv_init = [0, 0, 0, 0];
+p_length = [1, 1];
+p_mass = [1, 1];
+t_init = [pi/2, pi/2];
+tv_init = [0, 0];
 g = 9.81;
 [m, n_size] = size(p_length);
 
@@ -15,45 +15,24 @@ while j <= n_size
     initial_vals((j*2)) = tv_init(j);
     j = j + 1;
 end
-%t_interval = 0:.25: 10;
-t_interval = [0 10];
+t_interval = 0:.5: 20;
 
-options = odeset('RelTol', 1e-7);
+options = odeset('RelTol', 1e-);
 [T_out, Z_out] = ode45(@motion, t_interval, initial_vals, options);
 
 %Tangential Position/Velocity/Acceleration
 figure
 %Position
-subplot(3,1,1)
 hold all
-z = 1;
-while z <= n_size
-   plot(T_out, Z_out(:,z*2-1))
-   z = z+1;
-end
+plot(T_out, Z_out(:, 2))
+plot(T_out, Z_out(:, 4))
+%z = 1;
+% while z <= n_size
+%    plot(T_out, Z_out(:,z*2-1))
+%    z = z+1;
+% end
 title('Position')
 ylabel('Displacement (rad)')
-%Velocity
-subplot(3,1,2)
-hold all
-z = 1;
-while z <= n_size
-   plot(T_out, Z_out(:,z*2))
-   z = z+1;
-end
-title('Velocity')
-ylabel('Velocity (rad/s)')
-%Acceleration
-subplot(3,1,3)
-hold all
-z = 1;
-while z <= n_size
-   plot(T_out, Z_out(:,z*2-1))
-   z = z+1;
-end
-title('POSITION')
-xlabel('Time (s)')
-ylabel('Acceleration (rad/s^2)')
 
     function vals = calc_LHS(Z)
         A = zeros(n_size*3);

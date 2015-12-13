@@ -10,10 +10,10 @@ L1 = 1;
 L2 = 1;
 L3 = 1;
 L4 = 1;
-M1 = 10;
-M2 = 10;
-M3 = 10;
-M4 = 10;
+M1 = 1;
+M2 = 1;
+M3 = 1;
+M4 = 1;
 g = 9.81;
 
 theta1_0 = pi/2;
@@ -25,12 +25,11 @@ theta3v_0 = 0;
 theta4_0 = pi/2;
 theta4v_0 = 0;
 
-%t_interval = 0:.25: 1;
-t_interval = [0 20];
+t_interval = 0:.25: 1;
 initial_vals = [theta1_0; theta1v_0; theta2_0; theta2v_0; theta3_0; theta3v_0; theta4_0; theta4v_0];
 
 %options = odeset('RelTol', 1e-7);
-[T_out, Z_out] = ode45(@motion, t_interval, initial_vals); %, options);
+[T_out, Z_out] = ode45(@motion, t_interval, initial_vals) , options);
 
 t1_o = Z_out(:,1);
 t1d_o = Z_out(:,2);
@@ -197,22 +196,33 @@ figure
         t4 = Z(7);
         t4d = Z(8);
        
-        A = [
-            -M1*(L1/2)*cos(t1), 0, 0, 0,   -1, 0, 1, 0, 0, 0, 0, 0;
-            M1*(L1/2)*sin(t1), 0, 0, 0,     0, -1, 0, 1, 0, 0, 0, 0;
-            (-M1*L1^2)/12, 0, 0, 0,         (L1/2)*cos(t1), -(L1/2)*sin(t1), (L1/2)*cos(t1), -(L1/2)*sin(t1), 0, 0, 0, 0;
-            -M2*L1*cos(t1), -M2*(L2/2)*cos(t2), 0, 0,   0, 0, -1, 0, 1, 0, 0, 0;
-            M2*L1*sin(t1), M2*(L2/2)*sin(t2), 0, 0,     0, 0, 0, -1, 0, 1, 0, 0;
-            0, (-M2*L2^2)/12, 0, 0, 0,                  0, (L2/2)*cos(t2), -(L2/2)*sin(t2), (L2/2)*cos(t2), -(L2/2)*sin(t2), 0, 0;
-            -M3*L1*cos(t1), -M3*L2*cos(t2), -M3*(L3/2)*cos(t3), 0,      0, 0, 0, 0, -1, 0, 1, 0;
-            M3*L1*sin(t1), M3*L2*sin(t2), M3*(L3/2)*sin(t3), 0, 0,      0, 0, 0, 0, -1, 0, 1;
-            0, 0, (-M3*L3^2)/12, 0, 0,                                  0, 0, 0, (L3/2)*cos(t3), -(L3/2)*sin(t3),(L3/2)*cos(t3), -(L3/2)*sin(t3);
-            -M4*L1*cos(t1), -M4*L2*cos(t2), -M4*L3*cos(t3),             -M4*(L4/2)*cos(t4), 0, 0, 0, 0, 0, 0, -1, 0;
-            M4*L1*sin(t1), M4*L2*sin(t2), M4*L3*sin(t3),                M4*(L4/2)*sin(t4), 0, 0, 0, 0, 0, 0, 0, -1
-            0, 0, 0, (-M4*L4^2)/12,                                     0, 0, 0, 0, 0, 0, (L4/2)*cos(t4), -(L4/2)*sin(t4)
-            ];
+        A = [-M1*(L1/2)*cos(t1), 0, 0, 0, -1, 0, 1, 0, 0, 0, 0, 0;
+            M1*(L1/2)*sin(t1), 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0;
+            (-M1*L1^2)/12, 0, 0, 0,     (L1/2)*cos(t1), -(L1/2)*sin(t1), (L1/2)*cos(t1), -(L1/2)*sin(t1), 0, 0, 0, 0;
+            -M2*L1*cos(t1), -M2*(L2/2)*cos(t2), 0, 0, 0, 0, -1, 0, 1, 0, 0, 0;
+            M2*L1*sin(t1), M2*(L2/2)*sin(t2), 0, 0, 0, 0, 0, -1, 0, 1, 0, 0;
+            0, (-M2*L2^2)/12, 0, 0,     0, 0, (L2/2)*cos(t2), -(L2/2)*sin(t2), (L2/2)*cos(t2), -(L2/2)*sin(t2), 0, 0;
+            -M3*L1*cos(t1), -M3*L2*cos(t2), -M3*(L3/2)*cos(t3), 0, 0, 0, 0, 0, -1, 0, 1, 0;
+            M3*L1*sin(t1), M3*L2*sin(t2), M3*(L3/2)*sin(t3), 0, 0, 0, 0, 0, 0, -1, 0, 1;
+            0, 0, (-M3*L3^2)/12, 0,     0, 0, 0, 0, (L3/2)*cos(t3), -(L3/2)*sin(t3),(L3/2)*cos(t3), -(L3/2)*sin(t3);
+            -M4*L1*cos(t1), -M4*L2*cos(t2), -M4*L3*cos(t3), -M4*(L4/2)*cos(t4), 0, 0, 0, 0, 0, 0, -1, 0;
+            M4*L1*sin(t1), M4*L2*sin(t2), M4*L3*sin(t3), M4*(L4/2)*sin(t4), 0, 0, 0, 0, 0, 0, 0, -1
+            0, 0, 0, (-M4*L4^2)/12,     0, 0, 0, 0, 0, 0, (L4/2)*cos(t4), -(L4/2)*sin(t4)
+            ]
         
-A
+        r = [-M1*t1d^2*(L1/2)*sin(t1);
+            -M1*t1d^2*(L1/2)*cos(t1) - M1*g;
+            0;
+            - M2*t1d^2*L1*sin(t1) - M2*t2d^2*(L2/2)*sin(t2);
+            -M2*t1d^2*L1*cos(t1) - M2*t2d^2*(L2/2)*cos(t2) - M2*g;
+            0;
+            -M3*t1d^2*L1*sin(t1) - M3*t2d^2*L2*sin(t2) - M3*t3d^2*(L3/2)*sin(t3);
+            -M3*t1d^2*L1*cos(t1) - M3*t2d^2*L2*cos(t2) - M3*t3d^2*(L3/2)*cos(t3) - M3*g;
+            0;
+            -M4*t1d^2*L1*sin(t1) - M4*t2d^2*L2*sin(t2) - M4*t3d^2*L3*sin(t3) - M4*t4d^2*(L4/2)*sin(t4);
+            -M4*t1d^2*L1*cos(t1) - M4*t2d^2*L2*cos(t2) - M4*t3d^2*L3*cos(t3) - M4*t4d^2*(L4/2)*cos(t4) - M4*g;
+            0;
+            ];
         
         vals = A\r; 
     end

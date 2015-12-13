@@ -7,9 +7,9 @@ function res = double_pendulum()
     L2 = 1; % length pf pendulum 2 (m)
     m1 = 1; % mass of first tire (kg)
     m2 = 2; % mass of second tire (kg)
-    theta_01 = pi/3; % initial displacement angle (radians)
+    theta_01 = pi/2; % initial displacement angle (radians)
     omega_01 = 0; % initial angular velocity (radians/s)
-    theta_02 = pi/3;
+    theta_02 = pi/2;
     omega_02 = 0;
     
      % establish start conditions into column vector
@@ -52,57 +52,57 @@ function res = double_pendulum()
     legend('AD 1', 'AD 2')
     title('Angular Dispalcement')
    
-    figure
-    hold on
-    plot(T,Vx1+Vy1,'r')
-    plot(T,Vx2+Vy2,'b')
-    xlabel('Time')
-    ylabel('Acceleration')
-    legend('Vel m1', 'Vel m2')
-    title('Velocity')
-   
-    figure
-    hold on
-    plot(T,Ax1+Ay1,'r')
-    plot(T,Ax2+Ay2,'b')
-    xlabel('Time')
-    ylabel('Acceleration')
-    legend('Acl m1', 'Acl m2')
-    title('Acceleration')
-
-   figure  
-   hold all
-   KE1 = .5*m1*(Vx1.^2+Vy1.^2);
-   KE2 = .5*m2*(Vx2.^2+Vy2.^2);
-   KE = KE1 + KE2;
-   PE1 = m1*g.*y1;
-   PE2 = m2*g.*y2;
-   PE = PE1 + PE2;
-   E = KE + PE;
-   plot(T, PE,'k')
-   plot(T, KE,'b')
-   plot(T, E,'y')
-    xlabel('Time')
-    ylabel('Energy')
-   legend('PE', 'KE', 'E')
-   title('Energy')
-   
-    figure
-    hold all
-    plot(T, T1, 'r')
-    plot(T, T2, 'k')
-    xlabel('Time')
-    ylabel('Tension')
-    legend('T1', 'T2')
-    title('Tension')
-     
-    l1 = sqrt(x1.^2 + y1.^2);
-    l2 = sqrt((x1-x2).^2 + (y1-y2).^2);
-    figure
-    hold all
-    plot(T, l1)
-    plot(T, l2)
-    
+%     figure
+%     hold on
+%     plot(T,Vx1+Vy1,'r')
+%     plot(T,Vx2+Vy2,'b')
+%     xlabel('Time')
+%     ylabel('Acceleration')
+%     legend('Vel m1', 'Vel m2')
+%     title('Velocity')
+%    
+%     figure
+%     hold on
+%     plot(T,Ax1+Ay1,'r')
+%     plot(T,Ax2+Ay2,'b')
+%     xlabel('Time')
+%     ylabel('Acceleration')
+%     legend('Acl m1', 'Acl m2')
+%     title('Acceleration')
+% 
+%    figure  
+%    hold all
+%    KE1 = .5*m1*(Vx1.^2+Vy1.^2);
+%    KE2 = .5*m2*(Vx2.^2+Vy2.^2);
+%    KE = KE1 + KE2;
+%    PE1 = m1*g.*y1;
+%    PE2 = m2*g.*y2;
+%    PE = PE1 + PE2;
+%    E = KE + PE;
+%    plot(T, PE,'k')
+%    plot(T, KE,'b')
+%    plot(T, E,'y')
+%     xlabel('Time')
+%     ylabel('Energy')
+%    legend('PE', 'KE', 'E')
+%    title('Energy')
+%    
+%     figure
+%     hold all
+%     plot(T, T1, 'r')
+%     plot(T, T2, 'k')
+%     xlabel('Time')
+%     ylabel('Tension')
+%     legend('T1', 'T2')
+%     title('Tension')
+%      
+%     l1 = sqrt(x1.^2 + y1.^2);
+%     l2 = sqrt((x1-x2).^2 + (y1-y2).^2);
+%     figure
+%     hold all
+%     plot(T, l1)
+%     plot(T, l2)
+%     
     function res = find_theta(t, conditions)
         
         % unpack variable thetas
